@@ -8,7 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const authRoute = require('./src/routes/Auth');
 const userRoute = require('./src/routes/User');
-const ratingRoutes = require(".src/routes/ratingRoutes");
+const ratingRoutes = require("./src/routes/ratingRoutes");
 const favoriteRoutes = require("./src/routes/favoriteRoutes");
 
 // const postRoute = require("./src/routes/Post");
