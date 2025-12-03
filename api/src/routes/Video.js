@@ -4,7 +4,7 @@ const middlewareVerify = require('../controllers/middlewareControllers')
 
 
 // create Video
-route.post("/", middlewareVerify.verifyTokenAdmin, (req, res, next) => {
+route.post("/", (req, res, next) => {
     console.log("req.body:", req.body); // Kiểm tra dữ liệu từ client
     console.log("req.files:", req.files); // Kiểm tra file tải lên
     next();
