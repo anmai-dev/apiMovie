@@ -118,6 +118,9 @@ const videoControllers = {
                 videoURL: isUseURL ? videoURL : null,
                 views: 0,
                 isPublic: true,
+                description,
+                category,
+
             });
 
             // Lưu video vào DB

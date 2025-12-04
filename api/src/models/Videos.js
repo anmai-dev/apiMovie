@@ -6,6 +6,12 @@ const videoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    status: {
+        type: String,
+        enum: ['ready', 'failed'],
+        required: true,
+        default: 'ready',
+    },
     useURL: {
         type: Boolean,
         required: true,
@@ -32,6 +38,18 @@ const videoSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    description: {
+        type: String,
+        default: "",
+    },
+    category: {
+        type: String,
+        default: "Other",
+    },
+
+
 }
+
+
     , { timestamps: true });
 module.exports = mongoose.model('Video', videoSchema)
