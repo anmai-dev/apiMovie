@@ -15,6 +15,7 @@ const favoriteRoutes = require("./src/routes/favoriteRoutes");
 // const matchRoute = require("./src/routes/Match");
 const videoRoute = require("./src/routes/Video");
 const conmentRoute = require("./src/routes/commentRoutes");
+const reviewRoute = require("./src/routes/review");
 // const linkRoute = require("./src/routes/Link");
 const portfinder = require('portfinder');
 
@@ -111,6 +112,9 @@ app.use('/api/video', videoRoute);
 app.use("/api/rating", ratingRoutes);
 app.use("/api/comment", conmentRoute);
 app.use("/api/favorite", favoriteRoutes);
+app.use("/api/review", reviewRoute);
+
+
 
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
