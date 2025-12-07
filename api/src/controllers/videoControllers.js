@@ -11,6 +11,102 @@ cloudinary.config({
 });
 
 const videoControllers = {
+
+
+    getAllVideo: async (req, res) => {
+        try {
+            const allVideo = await Video.find();
+            return res.status(200).json(allVideo);
+        } catch (error) {
+            console.error("Error getting videos:", error);
+            return res.status(500).json({ message: "getallvideo Failed", error: error.toString() });
+        }
+    },
+
+
+    getVideoById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const video = await Video.findById(id);
+            if (!video) {
+                return res.status(404).json({ message: "Video not found" });
+            }
+            return res.status(200).json(video);
+        } catch (error) {
+            console.error("Error getting video by ID:", error);
+            return res.status(500).json({ message: "Internal server error", error: error.toString() });
+        }
+    },
+    searchVideoByTitle: async (req, res) => {
+        try {
+            const { title } = req.params;
+            const videos = await Video.find({ title: { $regex: title, $options: 'i' } });
+            return res.status(200).json(videos);
+        } catch (error) {
+            console.error("Error searching videos by title:", error);
+            return res.status(500).json({ message: "Internal server error", error: error.toString() });
+        }
+    },
+
+
+
+    // admin ---------------------------------
+    getAllVideonew: async (req, res) => {
+        try {
+            const { status } = req.query;
+
+            let filter = {};
+
+
+            if (status) {
+                filter.status = status;
+            }
+
+            const allVideo = await Video.find(filter).sort({ createdAt: -1 });
+
+            return res.status(200).json(allVideo);
+        } catch (error) {
+            console.error("Error getting videos:", error);
+            return res.status(500).json({
+                message: "getAllVideo failed",
+                error: error.toString()
+            });
+        }
+    },
+    deleteVideo: async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            // Tìm video trước khi xóa để lấy đường dẫn file
+            const video = await Video.findById(id);
+            if (!video) {
+                return res.status(404).json({ message: "Video not found" });
+            }
+
+            // Xóa file thumbnail nếu tồn tại
+            if (video.thumbnail) {
+                const thumbnailPath = path.join(__dirname, '../../../', video.thumbnail);
+                if (fs.existsSync(thumbnailPath)) {
+                    fs.unlinkSync(thumbnailPath);
+                }
+            }
+
+            // Xóa file video nếu tồn tại và không phải là URL
+            if (video.videoFile) {
+                const videoPath = path.join(__dirname, '../../../', video.videoFile);
+                if (fs.existsSync(videoPath)) {
+                    fs.unlinkSync(videoPath);
+                }
+            }
+
+            // Xóa video từ database
+            await Video.findByIdAndDelete(id);
+            return res.status(200).json({ message: "Video deleted successfully", id });
+        } catch (error) {
+            console.error("Error deleting video:", error);
+            return res.status(500).json({ message: "Internal server error", error: error.toString() });
+        }
+    },
     createVideo: async (req, res) => {
         try {
             console.log("req.body:", req.body);
@@ -132,73 +228,6 @@ const videoControllers = {
         }
     },
 
-    getAllVideo: async (req, res) => {
-        try {
-            const allVideo = await Video.find();
-            return res.status(200).json(allVideo);
-        } catch (error) {
-            console.error("Error getting videos:", error);
-            return res.status(500).json({ message: "getallvideo Failed", error: error.toString() });
-        }
-    },
-
-    deleteVideo: async (req, res) => {
-        try {
-            const { id } = req.params;
-
-            // Tìm video trước khi xóa để lấy đường dẫn file
-            const video = await Video.findById(id);
-            if (!video) {
-                return res.status(404).json({ message: "Video not found" });
-            }
-
-            // Xóa file thumbnail nếu tồn tại
-            if (video.thumbnail) {
-                const thumbnailPath = path.join(__dirname, '../../../', video.thumbnail);
-                if (fs.existsSync(thumbnailPath)) {
-                    fs.unlinkSync(thumbnailPath);
-                }
-            }
-
-            // Xóa file video nếu tồn tại và không phải là URL
-            if (video.videoFile) {
-                const videoPath = path.join(__dirname, '../../../', video.videoFile);
-                if (fs.existsSync(videoPath)) {
-                    fs.unlinkSync(videoPath);
-                }
-            }
-
-            // Xóa video từ database
-            await Video.findByIdAndDelete(id);
-            return res.status(200).json({ message: "Video deleted successfully", id });
-        } catch (error) {
-            console.error("Error deleting video:", error);
-            return res.status(500).json({ message: "Internal server error", error: error.toString() });
-        }
-    },
-    getVideoById: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const video = await Video.findById(id);
-            if (!video) {
-                return res.status(404).json({ message: "Video not found" });
-            }
-            return res.status(200).json(video);
-        } catch (error) {
-            console.error("Error getting video by ID:", error);
-            return res.status(500).json({ message: "Internal server error", error: error.toString() });
-        }
-    },
-    searchVideoByTitle: async (req, res) => {
-        try {
-            const { title } = req.params;
-            const videos = await Video.find({ title: { $regex: title, $options: 'i' } });
-            return res.status(200).json(videos);
-        } catch (error) {
-            console.error("Error searching videos by title:", error);
-            return res.status(500).json({ message: "Internal server error", error: error.toString() });
-        }
-    },
 
 };
 

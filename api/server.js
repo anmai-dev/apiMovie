@@ -7,9 +7,10 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 const authRoute = require('./src/routes/Auth');
-const userRoute = require('./src/routes/User');
+const userRoute = require('./src/routes/ad/User');
 const ratingRoutes = require("./src/routes/ratingRoutes");
 const favoriteRoutes = require("./src/routes/favoriteRoutes");
+const videoad = require("./src/routes/ad/advideo")
 
 // const postRoute = require("./src/routes/Post");
 // const matchRoute = require("./src/routes/Match");
@@ -113,6 +114,7 @@ app.use("/api/rating", ratingRoutes);
 app.use("/api/comment", conmentRoute);
 app.use("/api/favorite", favoriteRoutes);
 app.use("/api/review", reviewRoute);
+app.use("/api/admin", videoad);
 
 
 
